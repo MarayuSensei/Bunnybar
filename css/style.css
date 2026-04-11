@@ -12,6 +12,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent; /* Disable tap highlight on mobile */
 }
 
 body {
@@ -892,16 +893,22 @@ body {
     width: 50px;
     height: 50px;
     overflow: hidden;
-    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, border-radius 0.3s;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    flex-shrink: 0;
 }
 
 .audio-control:hover {
-    width: 170px;
+    width: 200px;
+}
+
+.audio-control.expanded {
+    width: 200px;
 }
 
 .audio-icon {
     font-size: 1.5rem;
+    min-width: 50px;
     width: 50px;
     height: 50px;
     display: flex;
@@ -912,13 +919,33 @@ body {
 }
 
 #volume-slider {
-    width: 100px;
+    width: 120px;
+    min-width: 80px;
     opacity: 0;
     transition: opacity 0.3s;
     cursor: pointer;
+    flex-shrink: 0;
+    margin-right: 10px;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
+    outline: none;
 }
 
-.audio-control:hover #volume-slider {
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+}
+
+.audio-control:hover #volume-slider,
+.audio-control.expanded #volume-slider {
     opacity: 1;
 }
 
@@ -973,4 +1000,1468 @@ body {
 
 .logout-btn:hover {
     opacity: 1;
+}
+
+/* =============================================
+   RESPONSIVE DESIGN SYSTEM
+   Breakpoints:
+     - >= 1281px  : Large desktop (default)
+     - 1024-1280px: Medium screens / small laptops
+     - 769-1023px : Tablets
+     - 481-768px  : Mobile / tablet portrait
+     - <= 480px   : Small mobile
+     - landscape  : Landscape orientation adjustments
+   ============================================= */
+
+/* --- Medium Screens / Small Laptops (1024px - 1280px) --- */
+@media (max-width: 1280px) {
+    .right-menu {
+        width: 230px;
+        padding: 15px;
+    }
+
+    .character-portrait {
+        height: 78vh;
+    }
+
+    .character #char-name-label {
+        bottom: 220px;
+        font-size: 1.5rem;
+    }
+
+    .dialogue-box {
+        padding: 20px 35px;
+        font-size: 1.35rem;
+        max-width: 550px;
+    }
+
+    .mixing-station-container {
+        gap: 30px;
+        padding: 15px 30px;
+    }
+
+    .left-drawer {
+        width: 320px;
+    }
+
+    .shelf {
+        gap: 35px 20px;
+    }
+
+    .collection-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+}
+
+/* --- Tablets (769px - 1023px) --- */
+@media (max-width: 1023px) {
+    .right-menu {
+        width: 200px;
+        padding: 12px;
+    }
+
+    .right-menu h2 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+
+    .char-card {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .char-card-avatar {
+        width: 42px;
+        height: 42px;
+    }
+
+    .character-portrait {
+        height: 70vh;
+    }
+
+    .character #char-name-label {
+        bottom: 190px;
+        font-size: 1.3rem;
+        padding: 5px 15px;
+    }
+
+    .dialogue-box {
+        top: 40px;
+        padding: 18px 30px;
+        font-size: 1.25rem;
+        max-width: 500px;
+        min-height: 100px;
+    }
+
+    .mixing-station-container {
+        gap: 20px;
+        padding: 15px 25px;
+    }
+
+    .shaker {
+        width: 60px;
+        height: 95px;
+    }
+
+    .btn {
+        padding: 9px 16px;
+        font-size: 1rem;
+    }
+
+    .left-drawer {
+        width: 300px;
+    }
+
+    .shelf {
+        gap: 30px 18px;
+    }
+
+    .ingredient {
+        width: 55px;
+        height: 82px;
+    }
+
+    .ing-image {
+        width: 55px;
+        height: 82px;
+    }
+
+    .toolbar-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.3rem;
+    }
+
+    .audio-control {
+        width: 44px;
+        height: 44px;
+    }
+
+    .audio-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 1.3rem;
+    }
+
+    .minigame-popup-box {
+        min-width: 350px;
+        padding: 30px;
+    }
+
+    .minigame-view h2 {
+        font-size: 2rem;
+    }
+
+    .large-shaker-container {
+        width: 320px;
+        height: 160px;
+    }
+
+    .result-image {
+        width: 150px;
+        height: 150px;
+    }
+
+    .modal-content.glass {
+        padding: 30px;
+        max-width: 750px;
+    }
+
+    .collection-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 18px;
+    }
+}
+
+/* --- Mobile / Tablet Portrait (481px - 768px) --- */
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+    }
+
+    .right-menu {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        height: 100%;
+        width: 260px;
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        border-left: 2px solid var(--glass-border);
+        box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+    }
+
+    .right-menu.mobile-open {
+        right: 0;
+    }
+
+    /* Mobile menu backdrop */
+    .right-menu.mobile-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+
+    /* Floating toggle for characters list on mobile */
+    .mobile-menu-toggle {
+        display: flex !important;
+        position: fixed;
+        right: 15px;
+        top: 15px;
+        z-index: 1001;
+        background: var(--bg-dark);
+        border: 2px solid var(--accent-color);
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        font-size: 1.4rem;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .mobile-menu-toggle:active {
+        transform: scale(0.9);
+    }
+
+    .main-area {
+        height: 100vh;
+        width: 100vw;
+    }
+
+    /* Character bigger on mobile */
+    .character-portrait {
+        height: 70vh;
+        width: auto;
+        max-width: 95vw;
+    }
+
+    /* Name label - keep near the character, above mixing station */
+    .character #char-name-label {
+        bottom: 130px;
+        top: auto;
+        font-size: 1rem;
+        padding: 4px 12px;
+        opacity: 0.9;
+    }
+
+    /* Dialogue - smaller text on mobile */
+    .dialogue-box {
+        top: 10px;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        min-height: 50px;
+        max-width: 75%;
+        gap: 8px;
+    }
+
+    .next-dialogue-btn, .continue-hint {
+        padding: 3px 12px;
+        font-size: 0.75rem;
+    }
+
+    /* Mixing station - make sure it's above character */
+    .mixing-station-container {
+        padding: 8px 12px;
+        gap: 10px;
+        bottom: 8px;
+        width: auto;
+        max-width: 90%;
+        justify-content: center;
+        border-radius: 14px;
+        z-index: 25;
+    }
+
+    .shaker {
+        width: 45px;
+        height: 72px;
+    }
+
+    .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Left drawer - should NOT cover mixing station */
+    .left-drawer {
+        width: 250px;
+        z-index: 45;
+        top: 0;
+        height: calc(100vh - 100px);
+    }
+
+    .drawer-content {
+        padding: 12px;
+    }
+
+    .drawer-content h2 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+    }
+
+    .shelf {
+        gap: 18px 12px;
+        padding-top: 10px;
+        padding-bottom: 30px;
+    }
+
+    .ingredient {
+        width: 48px;
+        height: 72px;
+        cursor: pointer;
+    }
+
+    .ing-image {
+        width: 48px;
+        height: 72px;
+    }
+
+    .ingredient span {
+        font-size: 0.6rem;
+    }
+
+    .top-toolbar {
+        top: 12px;
+        left: 12px;
+        gap: 8px;
+    }
+
+    /* Audio control - properly round */
+    .toolbar-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+
+    .audio-control {
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+    }
+
+    .audio-control.expanded {
+        width: 190px;
+        border-radius: 20px;
+    }
+
+    .audio-icon {
+        min-width: 40px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+
+    /* Disable hover expansion on touch (use .expanded class) */
+    .audio-control:hover {
+        width: 40px;
+    }
+
+    .audio-control.expanded:hover {
+        width: 190px;
+    }
+
+    #volume-slider {
+        width: 110px;
+        min-width: 70px;
+        height: 8px;
+    }
+
+    #volume-slider::-webkit-slider-thumb {
+        width: 22px;
+        height: 22px;
+    }
+
+    .audio-control:hover #volume-slider {
+        opacity: 0;
+    }
+
+    .audio-control.expanded #volume-slider {
+        opacity: 1;
+    }
+
+    /* Minigame */
+    .minigame-popup-box {
+        min-width: unset;
+        width: 92%;
+        max-width: 400px;
+        padding: 18px;
+    }
+
+    .minigame-view h2 {
+        font-size: 1.4rem;
+    }
+
+    .minigame-view {
+        gap: 15px;
+    }
+
+    .large-shaker-container {
+        width: 85vw;
+        max-width: 300px;
+        height: 140px;
+    }
+
+    .large-shaker {
+        width: 60px;
+        height: 110px;
+        touch-action: none;
+    }
+
+    .progress-bar-container {
+        width: 70vw;
+        max-width: 260px;
+        height: 20px;
+    }
+
+    .result-image {
+        width: 120px;
+        height: 120px;
+    }
+
+    .drink-desc {
+        font-size: 0.9rem;
+        max-width: 260px;
+    }
+
+    .modal-controls {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .modal-controls .btn {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+
+    /* Modals */
+    .modal-content.glass {
+        padding: 18px;
+        width: 95%;
+        max-height: 80vh;
+        border-radius: 16px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .collection-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+    }
+
+    .collection-item {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .collection-img {
+        width: 55px;
+        height: 55px;
+    }
+
+    .collection-name {
+        font-size: 0.85rem;
+    }
+
+    /* Message popup */
+    .message-box {
+        padding: 20px;
+        max-width: 88%;
+    }
+
+    .message-box h2 {
+        font-size: 1.4rem;
+    }
+
+    .message-box p {
+        font-size: 0.95rem;
+    }
+
+    /* Login prompt */
+    .login-prompt-content {
+        max-width: 90% !important;
+    }
+
+    /* Fatal overlay */
+    .fatal-title {
+        font-size: 1.8rem;
+        letter-spacing: 3px;
+    }
+
+    .fatal-text {
+        font-size: 0.9rem;
+    }
+
+    /* User profile */
+    .user-auth-bottom {
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+
+    /* Drawer handle bigger for mobile */
+    .drawer-handle {
+        width: 36px;
+        height: 70px;
+        right: -36px;
+    }
+}
+
+/* --- Small Mobile (<=480px) --- */
+@media (max-width: 480px) {
+    .character-portrait {
+        height: 65vh;
+        max-width: 92vw;
+    }
+
+    .character #char-name-label {
+        bottom: 110px;
+        top: auto;
+        font-size: 0.85rem;
+        padding: 3px 10px;
+        letter-spacing: 1px;
+        opacity: 0.9;
+    }
+
+    .dialogue-box {
+        top: 6px;
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        min-height: 40px;
+        max-width: 80%;
+        gap: 6px;
+        border-radius: 10px;
+    }
+
+    .next-dialogue-btn, .continue-hint {
+        padding: 2px 10px;
+        font-size: 0.7rem;
+    }
+
+    .mixing-station-container {
+        padding: 6px 8px;
+        gap: 6px;
+        bottom: 4px;
+        width: auto;
+        max-width: 95%;
+        border-radius: 10px;
+    }
+
+    .shaker {
+        width: 38px;
+        height: 60px;
+    }
+
+    #shaker-count {
+        font-size: 0.65rem;
+    }
+
+    .btn {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+        border-radius: 6px;
+    }
+
+    .left-drawer {
+        width: 220px;
+        height: calc(100vh - 80px);
+    }
+
+    .drawer-content {
+        padding: 10px;
+    }
+
+    .ingredient {
+        width: 42px;
+        height: 64px;
+        cursor: pointer;
+    }
+
+    .ing-image {
+        width: 42px;
+        height: 64px;
+    }
+
+    .ingredient span {
+        font-size: 0.55rem;
+    }
+
+    .shelf {
+        gap: 14px 10px;
+    }
+
+    .right-menu {
+        width: 220px;
+    }
+
+    .mobile-menu-toggle {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+        right: 8px;
+        top: 8px;
+    }
+
+    .top-toolbar {
+        top: 8px;
+        left: 8px;
+        gap: 6px;
+    }
+
+    .toolbar-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
+    }
+
+    .audio-control {
+        width: 34px;
+        height: 34px;
+        border-radius: 17px;
+    }
+
+    .audio-control.expanded {
+        width: 170px;
+        border-radius: 17px;
+    }
+
+    .audio-icon {
+        min-width: 34px;
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
+    }
+
+    .audio-control:hover {
+        width: 34px;
+    }
+
+    .audio-control.expanded:hover {
+        width: 170px;
+    }
+
+    #volume-slider {
+        width: 100px;
+        min-width: 60px;
+    }
+
+    .drawer-handle {
+        width: 32px;
+        height: 60px;
+        right: -32px;
+    }
+
+    #drawer-arrow {
+        font-size: 1rem;
+    }
+
+    /* Minigame */
+    .minigame-popup-box {
+        width: 96%;
+        padding: 12px;
+    }
+
+    .minigame-view h2 {
+        font-size: 1.1rem;
+    }
+
+    .minigame-view {
+        gap: 12px;
+    }
+
+    .large-shaker-container {
+        width: 80vw;
+        max-width: 250px;
+        height: 120px;
+    }
+
+    .large-shaker {
+        width: 50px;
+        height: 90px;
+    }
+
+    .horizontal-drag-hint {
+        font-size: 1.3rem;
+    }
+
+    .progress-bar-container {
+        width: 65vw;
+        max-width: 200px;
+        height: 18px;
+    }
+
+    .result-image {
+        width: 90px;
+        height: 90px;
+    }
+
+    .drink-desc {
+        font-size: 0.8rem;
+        max-width: 200px;
+    }
+
+    .modal-controls .btn {
+        padding: 6px 10px;
+        font-size: 0.78rem;
+    }
+
+    /* Modals */
+    .modal-content.glass {
+        padding: 12px;
+        width: 96%;
+        border-radius: 12px;
+    }
+
+    .modal-header {
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+    }
+
+    .modal-header h2 {
+        font-size: 0.9rem;
+    }
+
+    .close-btn {
+        font-size: 1.8rem;
+    }
+
+    .collection-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+    }
+
+    .collection-item {
+        padding: 8px;
+        border-radius: 10px;
+    }
+
+    .collection-img {
+        width: 45px;
+        height: 45px;
+        margin-bottom: 6px;
+    }
+
+    .collection-name {
+        font-size: 0.75rem;
+    }
+
+    .collection-info {
+        font-size: 0.6rem;
+    }
+
+    .tag-badge {
+        font-size: 0.55rem;
+        padding: 1px 3px;
+    }
+
+    /* Message popup */
+    .message-box {
+        padding: 15px;
+        max-width: 92%;
+    }
+
+    .message-box h2 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+    }
+
+    .message-box p {
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+    }
+
+    /* Login prompt */
+    .login-prompt-content h2 {
+        font-size: 1.1rem;
+    }
+
+    .login-prompt-content p {
+        font-size: 0.85rem;
+    }
+
+    .skip-link {
+        font-size: 0.75rem !important;
+    }
+
+    /* Fatal overlay */
+    .fatal-title {
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+    }
+
+    .fatal-text {
+        font-size: 0.8rem;
+    }
+
+    #fatal-countdown {
+        font-size: 3rem !important;
+    }
+}
+
+/* =============================================
+   LANDSCAPE PHONE OVERHAUL
+   Phone landscape = short height + wide width
+   Key: max-height detects phone landscape reliably
+   ============================================= */
+
+/* --- Phone Landscape (height ≤ 500px, touch devices only) --- */
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+    /* Force mobile layout - hide right menu, show toggle */
+    .game-container {
+        flex-direction: column;
+    }
+
+    .right-menu {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        height: 100%;
+        width: 240px;
+        transition: right 0.3s ease;
+        z-index: 1000;
+    }
+
+    .right-menu.mobile-open {
+        right: 0;
+    }
+
+    .mobile-menu-toggle {
+        display: flex !important;
+    }
+
+    .main-area {
+        height: 100vh;
+        width: 100vw;
+    }
+
+    /* Character - fill most of the short screen */
+    .character-portrait {
+        height: 82vh;
+        max-width: 50vw;
+    }
+
+    /* Name label - keep near the character */
+    .character #char-name-label {
+        bottom: 80px;
+        top: auto;
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        opacity: 0.8;
+        letter-spacing: 1px;
+    }
+
+    /* Dialogue - compact single line style */
+    .dialogue-box {
+        top: 3px;
+        padding: 5px 12px;
+        font-size: 0.75rem;
+        min-height: 28px;
+        max-width: 55%;
+        gap: 4px;
+        border-radius: 8px;
+    }
+
+    .next-dialogue-btn, .continue-hint {
+        padding: 2px 8px;
+        font-size: 0.6rem;
+    }
+
+    /* Mixing station - slim bar at bottom */
+    .mixing-station-container {
+        bottom: 3px;
+        padding: 4px 10px;
+        gap: 8px;
+        border-radius: 10px;
+        max-width: 60%;
+        z-index: 25;
+    }
+
+    .shaker {
+        width: 30px;
+        height: 48px;
+    }
+
+    #shaker-count {
+        font-size: 0.55rem;
+    }
+
+    .controls {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+    }
+
+    .btn {
+        padding: 3px 8px;
+        font-size: 0.7rem;
+        border-radius: 5px;
+    }
+
+    /* Ingredient drawer */
+    .left-drawer {
+        width: 200px;
+        height: 100vh;
+        top: 0;
+        z-index: 45;
+    }
+
+    .drawer-content {
+        padding: 8px;
+    }
+
+    .drawer-content h2 {
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+    }
+
+    .shelf {
+        gap: 12px 8px;
+        padding-top: 5px;
+    }
+
+    .ingredient {
+        width: 36px;
+        height: 54px;
+    }
+
+    .ing-image {
+        width: 36px;
+        height: 54px;
+    }
+
+    .ingredient span {
+        font-size: 0.45rem;
+    }
+
+    .drawer-handle {
+        width: 28px;
+        height: 50px;
+        right: -28px;
+    }
+
+    #drawer-arrow {
+        font-size: 0.9rem;
+    }
+
+    /* Toolbar - tiny */
+    .top-toolbar {
+        top: 4px;
+        left: 4px;
+        gap: 4px;
+    }
+
+    .toolbar-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+
+    .audio-control {
+        width: 30px;
+        height: 30px;
+        border-radius: 15px;
+    }
+
+    .audio-control.expanded {
+        width: 150px;
+        border-radius: 15px;
+    }
+
+    .audio-icon {
+        min-width: 30px;
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+
+    .mobile-menu-toggle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+        right: 4px;
+        top: 4px;
+    }
+
+    /* Minigame - compact */
+    .minigame-popup-box {
+        padding: 8px 12px;
+        max-height: 95vh;
+        overflow-y: auto;
+        width: 80%;
+        max-width: 450px;
+    }
+
+    .minigame-view h2 {
+        font-size: 0.95rem;
+    }
+
+    .minigame-view {
+        gap: 6px;
+    }
+
+    .large-shaker-container {
+        width: 180px;
+        height: 80px;
+    }
+
+    .large-shaker {
+        width: 35px;
+        height: 70px;
+    }
+
+    .horizontal-drag-hint {
+        font-size: 1rem;
+    }
+
+    .progress-bar-container {
+        width: 160px;
+        height: 14px;
+    }
+
+    .result-image {
+        width: 70px;
+        height: 70px;
+    }
+
+    .large-drink-result {
+        margin: 5px 0;
+    }
+
+    .drink-desc {
+        font-size: 0.7rem;
+        max-width: 200px;
+    }
+
+    .modal-controls {
+        gap: 6px;
+        margin-top: 8px;
+    }
+
+    .modal-controls .btn {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+    }
+
+    /* Modals */
+    .modal-content.glass {
+        max-height: 95vh;
+        padding: 10px;
+    }
+
+    .message-box {
+        padding: 12px;
+    }
+
+    .message-box h2 {
+        font-size: 1rem;
+        margin-bottom: 6px;
+    }
+
+    .message-box p {
+        font-size: 0.75rem;
+        margin-bottom: 10px;
+    }
+}
+
+/* --- Larger Phone Landscape (height 380-600px, touch devices, e.g. iPhone 14 Pro Max 932x430) --- */
+@media (min-height: 380px) and (max-height: 600px) and (orientation: landscape) and (pointer: coarse) {
+    /* Force mobile layout - hide right menu */
+    .game-container {
+        flex-direction: column;
+    }
+
+    .right-menu {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        height: 100%;
+        width: 250px;
+        transition: right 0.3s ease;
+        z-index: 1000;
+    }
+
+    .right-menu.mobile-open {
+        right: 0;
+    }
+
+    .mobile-menu-toggle {
+        display: flex !important;
+    }
+
+    .main-area {
+        height: 100vh;
+        width: 100vw;
+    }
+
+    /* Character - bigger */
+    .character-portrait {
+        height: 85vh;
+        max-width: 45vw;
+    }
+
+    /* Name label - keep near the character */
+    .character #char-name-label {
+        bottom: 90px;
+        top: auto;
+        font-size: 0.75rem;
+        padding: 2px 10px;
+        opacity: 0.85;
+    }
+
+    /* Dialogue - compact */
+    .dialogue-box {
+        top: 5px;
+        padding: 6px 14px;
+        font-size: 0.8rem;
+        min-height: 32px;
+        max-width: 52%;
+        gap: 5px;
+    }
+
+    .next-dialogue-btn, .continue-hint {
+        padding: 2px 8px;
+        font-size: 0.65rem;
+    }
+
+    /* Mixing station */
+    .mixing-station-container {
+        bottom: 4px;
+        padding: 5px 10px;
+        gap: 8px;
+        max-width: 55%;
+        z-index: 25;
+    }
+
+    .shaker {
+        width: 32px;
+        height: 52px;
+    }
+
+    #shaker-count {
+        font-size: 0.6rem;
+    }
+
+    .controls {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+    }
+
+    .btn {
+        padding: 4px 8px;
+        font-size: 0.72rem;
+    }
+
+    /* Drawer */
+    .left-drawer {
+        width: 220px;
+        z-index: 45;
+        top: 0;
+        height: calc(100vh - 60px);
+    }
+
+    .drawer-content {
+        padding: 10px;
+    }
+
+    .shelf {
+        gap: 12px 10px;
+    }
+
+    .ingredient {
+        width: 38px;
+        height: 58px;
+    }
+
+    .ing-image {
+        width: 38px;
+        height: 58px;
+    }
+
+    .ingredient span {
+        font-size: 0.5rem;
+    }
+
+    .drawer-handle {
+        width: 30px;
+        height: 55px;
+        right: -30px;
+    }
+
+    /* Toolbar */
+    .top-toolbar {
+        top: 5px;
+        left: 5px;
+        gap: 5px;
+    }
+
+    .toolbar-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+
+    .audio-control {
+        width: 32px;
+        height: 32px;
+        border-radius: 16px;
+    }
+
+    .audio-control.expanded {
+        width: 160px;
+    }
+
+    .audio-icon {
+        min-width: 32px;
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+
+    .mobile-menu-toggle {
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
+        right: 5px;
+        top: 5px;
+    }
+
+    /* Minigame */
+    .minigame-popup-box {
+        padding: 10px 14px;
+        max-height: 95vh;
+        overflow-y: auto;
+        width: 75%;
+        max-width: 500px;
+    }
+
+    .minigame-view h2 {
+        font-size: 1rem;
+    }
+
+    .minigame-view {
+        gap: 8px;
+    }
+
+    .large-shaker-container {
+        width: 200px;
+        height: 90px;
+    }
+
+    .large-shaker {
+        width: 38px;
+        height: 78px;
+    }
+
+    .progress-bar-container {
+        width: 180px;
+        height: 16px;
+    }
+
+    .result-image {
+        width: 80px;
+        height: 80px;
+    }
+
+    .large-drink-result {
+        margin: 6px 0;
+    }
+
+    .drink-desc {
+        font-size: 0.75rem;
+        max-width: 220px;
+    }
+
+    .modal-controls .btn {
+        padding: 4px 10px;
+        font-size: 0.72rem;
+    }
+
+    .modal-content.glass {
+        max-height: 95vh;
+        padding: 12px;
+    }
+
+    .message-box {
+        padding: 14px;
+    }
+
+    .message-box h2 {
+        font-size: 1.1rem;
+    }
+
+    .message-box p {
+        font-size: 0.8rem;
+        margin-bottom: 12px;
+    }
+}
+
+/* --- True Tablet Landscape (large width + medium height, has room for sidebar) --- */
+@media (min-width: 1024px) and (max-height: 800px) and (orientation: landscape) {
+    .character-portrait {
+        height: 72vh;
+    }
+
+    .character #char-name-label {
+        bottom: 200px;
+        top: auto;
+        font-size: 1.1rem;
+    }
+
+    .dialogue-box {
+        top: 10px;
+        font-size: 1.05rem;
+        min-height: 55px;
+    }
+
+    .mixing-station-container {
+        bottom: 8px;
+        padding: 8px 18px;
+    }
+
+    .shaker {
+        width: 45px;
+        height: 72px;
+    }
+}
+
+/* --- Touch Device Optimizations --- */
+@media (hover: none) and (pointer: coarse) {
+    .btn {
+        min-height: 36px;
+    }
+
+    .char-card {
+        min-height: 46px;
+    }
+
+    .drawer-handle {
+        min-width: 40px;
+        min-height: 65px;
+    }
+
+    /* Larger shaker for better drag target */
+    .large-shaker {
+        touch-action: none;
+    }
+
+    .drawer-handle {
+        touch-action: pan-x;
+    }
+
+    /* Tap-to-add ingredient indicator */
+    .ingredient {
+        cursor: pointer;
+    }
+
+    .ingredient:active {
+        transform: scale(0.92);
+        box-shadow: 0 0 12px var(--accent-color);
+    }
+}
+
+/* --- Very Tall Screens (e.g. phone in portrait with notch) --- */
+@media (max-width: 768px) and (min-height: 800px) {
+    .character-portrait {
+        height: 68vh;
+    }
+
+    .dialogue-box {
+        top: 15px;
+    }
+
+    .mixing-station-container {
+        bottom: 12px;
+    }
+
+    .character #char-name-label {
+        bottom: 160px;
+        top: auto;
+    }
+}
+/* --- Short Viewport Height (< 600px) - Convert sidebar to toggle button ---
+   Works on ALL devices (desktop, tablet, phone) regardless of pointer type.
+   When the screen is too short, sidebar takes too much vertical space,
+   so we hide it and show a toggle button instead. */
+@media (max-height: 600px) {
+    .right-menu {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        height: 100%;
+        width: 250px;
+        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        border-left: 2px solid var(--glass-border);
+        box-shadow: -8px 0 25px rgba(0,0,0,0.7);
+        overflow-y: auto;
+    }
+
+    .right-menu.mobile-open {
+        right: 0;
+    }
+
+    /* Backdrop when open */
+    .right-menu.mobile-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: -1;
+    }
+
+    /* Show toggle button */
+    .mobile-menu-toggle {
+        display: flex !important;
+        position: fixed;
+        right: 10px;
+        top: 10px;
+        z-index: 1001;
+        background: var(--bg-dark);
+        border: 2px solid var(--accent-color);
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        font-size: 1.2rem;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        backdrop-filter: blur(10px);
+        transition: transform 0.2s;
+    }
+
+    .mobile-menu-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 12px var(--accent-color);
+    }
+
+    .mobile-menu-toggle:active {
+        transform: scale(0.9);
+    }
+}
+
+/* --- Hide mobile toggle by default (desktop with enough height) --- */
+.mobile-menu-toggle {
+    display: none;
 }

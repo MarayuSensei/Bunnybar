@@ -64,6 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let isShowingReaction = false;
     let isFatalReaction = false;
 
+    // Device Detection
+    const isMobile = () => {
+        const isSmallWidth = window.innerWidth <= 768;
+        const isLandscapePhone = (window.innerHeight <= 600 && window.innerWidth > window.innerHeight);
+        const isTouchDevice = navigator.maxTouchPoints > 0;
+        return isSmallWidth || (isLandscapePhone && isTouchDevice) || isTouchDevice;
+    };
+
     // Dialogue Memory
     let dialogueHistory = {};
 
@@ -85,38 +93,99 @@ document.addEventListener('DOMContentLoaded', () => {
         setupDrawer();
         setupDragAndDrop();
         setupShakerMinigame();
+        setupMobileUI();
         
         // Initialize CloudSync and pass the update callback
         if (window.CloudSync) {
             window.CloudSync.init((newDrinks) => {
-                // This runs whenever cloud data changes or login happens
                 renderCollection();
+            });
+        }
+    }
+
+    function setupMobileUI() {
+        const rightMenu = document.querySelector('.right-menu');
+        if (!rightMenu) return;
+
+        // Check if menu should be in toggle mode (narrow width OR short height)
+        const isMenuToggleMode = () => {
+            return window.innerWidth <= 768 || window.innerHeight < 600;
+        };
+
+        // Create toggle button
+        const toggleBtn = document.createElement('div');
+        toggleBtn.className = 'mobile-menu-toggle';
+        toggleBtn.innerHTML = '👥';
+        document.body.appendChild(toggleBtn);
+
+        const closeMobileMenu = () => {
+            rightMenu.classList.remove('mobile-open');
+            toggleBtn.innerHTML = '👥';
+        };
+
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            rightMenu.classList.toggle('mobile-open');
+            toggleBtn.innerHTML = rightMenu.classList.contains('mobile-open') ? '✖' : '👥';
+        });
+
+        // Close menu when clicking outside (in toggle mode)
+        document.addEventListener('click', (e) => {
+            if (isMenuToggleMode() && rightMenu.classList.contains('mobile-open')) {
+                if (!rightMenu.contains(e.target) && !toggleBtn.contains(e.target)) {
+                    closeMobileMenu();
+                }
+            }
+        });
+
+        // Close menu when character selected (in toggle mode)
+        document.querySelectorAll('.char-card').forEach(card => {
+            card.addEventListener('click', () => {
+                if (isMenuToggleMode()) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize — close menu when returning to full sidebar mode
+        window.addEventListener('resize', () => {
+            if (!isMenuToggleMode()) {
+                closeMobileMenu();
+            }
+        });
+
+        // Touch-friendly audio control (tap to expand/collapse)
+        const audioControl = document.querySelector('.audio-control');
+        if (audioControl && isMobile()) {
+            audioControl.addEventListener('click', (e) => {
+                if (e.target.closest('#volume-slider')) return;
+                audioControl.classList.toggle('expanded');
             });
         }
     }
 
     function setupDrawer() {
         let isDragging = false;
+        let startX;
+        let drawerWidth = isMobile() ? 300 : 360;
+        let hasMoved = false;
+
         drawerHandle.addEventListener('click', (e) => {
             if (isDragging) return;
             isDrawerOpen = !isDrawerOpen;
             updateDrawerUI();
         });
 
-        let startX;
-        let drawerWidth = 360;
-        let hasMoved = false;
-
-        drawerHandle.addEventListener('mousedown', (e) => {
+        const handleStart = (clientX) => {
             isDragging = false;
             hasMoved = false;
-            startX = e.clientX;
+            startX = clientX;
             leftDrawer.style.transition = 'none';
-        });
+        };
 
-        document.addEventListener('mousemove', (e) => {
+        const handleMove = (clientX) => {
             if (startX !== undefined) {
-                let moveX = e.clientX - startX;
+                let moveX = clientX - startX;
                 if (Math.abs(moveX) > 5) {
                     isDragging = true;
                     hasMoved = true;
@@ -129,20 +198,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
-        });
+        };
 
-        document.addEventListener('mouseup', (e) => {
+        const handleEnd = (clientX) => {
             if (startX !== undefined) {
                 if (hasMoved) {
-                    let moveX = e.clientX - startX;
+                    let moveX = clientX - (startX || 0);
                     if (!isDrawerOpen && moveX > 50) isDrawerOpen = true;
                     else if (isDrawerOpen && moveX < -50) isDrawerOpen = false;
                 }
                 startX = undefined;
+                updateDrawerUI();
                 leftDrawer.style.transition = '';
                 leftDrawer.style.transform = '';
-                updateDrawerUI();
-                setTimeout(() => { isDragging = false; }, 100);
+            }
+        };
+
+        drawerHandle.addEventListener('mousedown', (e) => handleStart(e.clientX));
+        drawerHandle.addEventListener('touchstart', (e) => handleStart(e.touches[0].clientX));
+
+        document.addEventListener('mousemove', (e) => handleMove(e.clientX));
+        document.addEventListener('touchmove', (e) => handleMove(e.touches[0].clientX));
+
+        document.addEventListener('mouseup', (e) => handleEnd(e.clientX));
+        document.addEventListener('touchend', (e) => {
+            if (e.changedTouches && e.changedTouches[0]) {
+                handleEnd(e.changedTouches[0].clientX);
+            } else {
+                handleEnd(0);
             }
         });
     }
@@ -153,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setupDragAndDrop() {
+        // Desktop drag-and-drop
         shakerEl.addEventListener('dragover', (e) => {
             e.preventDefault();
             if (currentShaker.length < MAX_INGREDIENTS && !mixedDrink) {
@@ -180,6 +264,40 @@ document.addEventListener('DOMContentLoaded', () => {
             const ing = ingredientsData.find(i => i.id === ingId);
             if (ing) addIngredient(ing);
         });
+    }
+
+    // Mobile tap-to-add ingredient handler
+    function handleMobileIngredientTap(ing, ingEl) {
+        if (!activeCharacter) {
+            showPopup("แจ้งเตือน", "กรุณาเลือกผู้ชิมก่อนที่จะเริ่มผสมเครื่องดื่ม", "Red");
+            return;
+        }
+        if (currentShaker.length >= MAX_INGREDIENTS || mixedDrink) return;
+
+        // Visual feedback - bounce animation
+        ingEl.style.transition = 'transform 0.15s ease';
+        ingEl.style.transform = 'scale(0.85)';
+        setTimeout(() => {
+            ingEl.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                ingEl.style.transform = '';
+                ingEl.style.transition = '';
+            }, 150);
+        }, 150);
+
+        // Flash the shaker to show ingredient was added
+        shakerEl.classList.add('drag-over');
+        setTimeout(() => shakerEl.classList.remove('drag-over'), 300);
+
+        addIngredient(ing);
+
+        // Auto-close drawer after shaker is full
+        if (currentShaker.length >= MAX_INGREDIENTS && isMobile()) {
+            setTimeout(() => {
+                isDrawerOpen = false;
+                updateDrawerUI();
+            }, 400);
+        }
     }
 
     function setupAudio() {
@@ -230,16 +348,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setupShakerMinigame() {
         let lastX = 0;
-        largeShaker.addEventListener('mousedown', (e) => {
-            isShakingDragging = true;
-            lastX = e.clientX;
-            dragHint.style.opacity = '0';
-        });
 
-        document.addEventListener('mousemove', (e) => {
+        const handleStart = (clientX) => {
+            isShakingDragging = true;
+            lastX = clientX;
+            dragHint.style.opacity = '0';
+        };
+
+        const handleMove = (clientX) => {
             if (!isShakingDragging) return;
-            let deltaX = e.clientX - lastX;
-            lastX = e.clientX;
+            let deltaX = clientX - lastX;
+            lastX = clientX;
             largeShaker.style.transform = `translateX(calc(-50% + ${deltaX * 0.8}px)) rotate(${deltaX * 0.3}deg)`;
             let strength = Math.abs(deltaX);
             if (strength > 0) {
@@ -252,14 +371,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 progressFill.style.width = `${minigameProgress}%`;
             }
-        });
+        };
 
-        document.addEventListener('mouseup', () => {
+        const handleEnd = () => {
             if (isShakingDragging) {
                 isShakingDragging = false;
                 largeShaker.style.transform = `translateX(-50%) rotate(0deg)`;
             }
-        });
+        };
+
+        largeShaker.addEventListener('mousedown', (e) => handleStart(e.clientX));
+        largeShaker.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleStart(e.touches[0].clientX);
+        }, { passive: false });
+
+        document.addEventListener('mousemove', (e) => handleMove(e.clientX));
+        document.addEventListener('touchmove', (e) => {
+            if (isShakingDragging) {
+                e.preventDefault();
+                handleMove(e.touches[0].clientX);
+            }
+        }, { passive: false });
+
+        document.addEventListener('mouseup', handleEnd);
+        document.addEventListener('touchend', handleEnd);
     }
 
     function renderCharacters() {
@@ -285,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ingEl = document.createElement('div');
             ingEl.className = 'ingredient';
             ingEl.title = ing.name;
-            ingEl.draggable = true;
+            ingEl.draggable = !isMobile(); // Only enable HTML5 drag on desktop
             if (ing.image) {
                 ingEl.innerHTML = `
                     <img src="${ing.image}" class="ing-image" alt="${ing.name}" draggable="false">
@@ -298,9 +434,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span>${ing.name}</span>
                 `;
             }
+
+            // Desktop: drag-and-drop
             ingEl.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('text/plain', ing.id);
             });
+
+            // Mobile: tap to add ingredient
+            ingEl.addEventListener('click', (e) => {
+                if (isMobile()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleMobileIngredientTap(ing, ingEl);
+                }
+            });
+
             ingredientsShelfEl.appendChild(ingEl);
         });
     }
