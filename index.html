@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BunnyBar - Classic Tavern</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+    <div class="game-container">
+
+        <!-- Left Drawer (Ingredients Shelf) -->
+        <div id="left-drawer" class="left-drawer closed">
+            <div class="drawer-content">
+                <h2>วัตถุดิบ (Ingredients)</h2>
+                <div class="shelf" id="ingredients-shelf">
+                    <!-- dynamically populated -->
+                </div>
+            </div>
+            <div class="drawer-handle" id="drawer-handle">
+                <span id="drawer-arrow">▶</span>
+            </div>
+        </div>
+
+        <!-- New Toolbar Layout -->
+        <div class="top-toolbar">
+            <div id="btn-collection" class="toolbar-btn" title="สมุดสะสมเมนู">
+                <span>🏆</span>
+            </div>
+            <div class="audio-control">
+                <span class="audio-icon">🔉</span>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.2">
+            </div>
+        </div>
+
+        <audio id="bg-music" loop>
+            <source src="assets/bmg/bgm.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- Main Game Area -->
+        <div class="main-area">
+            <div class="background-overlay"></div>
+
+            <!-- Dialogue Box -->
+            <div id="dialogue-box" class="dialogue-box hidden">
+                <p id="dialogue-text">...</p>
+                <button id="btn-next-dialogue" class="next-dialogue-btn hidden">คลิกเพื่อดำเนินการต่อ</button>
+            </div>
+
+            <!-- Character Area -->
+            <div class="character-display">
+                <div id="active-character" class="character placeholder hidden">
+                    <img id="character-img" class="character-portrait" src="" alt="Customer Portrait">
+                    <p id="char-name-label">Name</p>
+                </div>
+            </div>
+
+            <!-- Transparent Mixing Area (Replaces Old Bar Counter) -->
+            <div class="mixing-station-container" id="mixing-station-zone">
+                <div class="shaker dropzone" id="shaker">
+                    <div class="shaker-glow"></div>
+                    <span id="shaker-count">0/3</span>
+                    <div class="shaker-ingredients" id="shaker-contents"></div>
+                    <div class="drop-hint hidden" id="drop-hint">วางเครื่องดื่มที่นี่</div>
+                </div>
+
+                <div class="controls">
+                    <button id="btn-mix" class="btn mix-btn" disabled>ผสมเครื่องดื่ม!</button>
+                    <button id="btn-trash" class="btn trash-btn">เททิ้ง (Trash)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Menu : Character Selection -->
+        <div class="right-menu">
+            <h2>ลูกค้าวันนี้</h2>
+            <div class="character-list" id="character-list">
+                <!-- dynamically populated -->
+            </div>
+            
+            <!-- User Authentication at Bottom -->
+            <div class="user-auth-bottom">
+                <div id="google-login-btn"></div>
+                <div id="user-profile" class="user-profile hidden">
+                    <img id="user-avatar" src="" alt="avatar">
+                    <div class="user-info-stack">
+                        <span id="user-name"></span>
+                        <button id="btn-logout" class="logout-link">ออกจากระบบ (Logout)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Minigame Overlay -->
+    <div id="minigame-overlay" class="overlay hidden minigame-overlay">
+        <div class="minigame-popup-box">
+            <!-- view 1: shaking -->
+            <div id="minigame-shaking-view" class="minigame-view">
+                <h2>ลากซ้าย-ขวา เพื่อเขย่า!</h2>
+                <div class="large-shaker-container">
+                    <div id="large-shaker" class="large-shaker">
+                        <div class="horizontal-drag-hint">↔</div>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- view 2: result -->
+            <div id="minigame-result-view" class="minigame-view hidden">
+                <h2 id="minigame-drink-name">Drink Name</h2>
+                <div id="large-drink-result" class="large-drink-result">
+                    <img id="result-drink-image" src="" alt="Drink Result" class="result-image">
+                </div>
+                <p id="minigame-drink-desc" class="drink-desc"></p>
+                <div class="modal-controls">
+                    <button id="btn-modal-serve" class="btn serve-btn">พร้อมเสิร์ฟ! (Serve)</button>
+                    <button id="btn-modal-trash" class="btn trash-btn">เททิ้ง (Trash)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals / Overlays for messages -->
+    <div id="message-overlay" class="overlay hidden">
+        <div class="message-box">
+            <h2 id="msg-title">Result</h2>
+            <p id="msg-desc">Description</p>
+            <button id="btn-close-msg" class="btn">เล่นต่อ</button>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/cloudSync.js"></script>
+    <script src="js/main.js"></script>
+    <!-- Fatal Overlay (Marayu Easter Egg) -->
+    <div id="fatal-overlay" class="fatal-overlay">
+        <div class="fatal-title">CRITICAL SYSTEM FAILURE</div>
+        <div class="fatal-text" style="color: #ffaa00; font-size: 1.5rem; margin-bottom: 20px;">EVACUATION PROTOCOL INITIATED</div>
+        <div id="fatal-countdown" style="font-size: 5rem; font-weight: bold; margin: 20px 0;">10</div>
+        <div class="fatal-text">REASON: MARAYU'S SANITY DEPLETED</div>
+        <div class="fatal-text" style="margin-top: 20px; opacity: 0.5;">DO NOT ATTEMPT TO RECONNECT</div>
+    </div>
+
+    <audio id="fatal-alarm" src="assets/sfx/Nuclear Evacuation Alarm Sound Effect.mp3"></audio>
+
+    <!-- Collection Modal -->
+    <div id="collection-modal" class="modal hidden">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <h2>🏆 สมุดสะสมเมนูเครื่องดื่ม (Collection)</h2>
+                <button id="btn-close-collection" class="close-btn">&times;</button>
+            </div>
+            <div id="collection-grid" class="collection-grid">
+                <!-- dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Prompt Modal -->
+    <div id="login-prompt-overlay" class="modal hidden">
+        <div class="modal-content glass login-prompt-content">
+            <h2>🍷 ยินดีต้อนรับสู่ BunnyBar</h2>
+            <p>กรุณาล็อคอินเพื่อบันทึกความคืบหน้าและการสะสมเมนูของคุณ</p>
+            <div id="google-login-prompt-btn" class="prompt-btn-container"></div>
+            <p id="btn-skip-login" class="skip-link">ไม่ต้องการล็อคอิน? คลิกที่นี่เพื่อเล่นทันที</p>
+        </div>
+    </div>
+</body>
+
+</html>
