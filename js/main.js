@@ -94,12 +94,77 @@ document.addEventListener('DOMContentLoaded', () => {
         setupDragAndDrop();
         setupShakerMinigame();
         setupMobileUI();
+        setupFullscreen();
         
         // Initialize CloudSync and pass the update callback
         if (window.CloudSync) {
             window.CloudSync.init((newDrinks) => {
                 renderCollection();
             });
+        }
+    }
+
+    // ---- Fullscreen System ----
+    function setupFullscreen() {
+        const btnFullscreen = document.getElementById('btn-fullscreen');
+        if (!btnFullscreen) return;
+
+        const enterFullscreen = () => {
+            const el = document.documentElement;
+            if (el.requestFullscreen) {
+                el.requestFullscreen().catch(() => {});
+            } else if (el.webkitRequestFullscreen) {
+                el.webkitRequestFullscreen();
+            }
+        };
+
+        const exitFullscreen = () => {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        };
+
+        const isFullscreen = () => {
+            return !!(document.fullscreenElement || document.webkitFullscreenElement);
+        };
+
+        const updateIcon = () => {
+            btnFullscreen.querySelector('span').textContent = isFullscreen() ? '⛌' : '⛶';
+            btnFullscreen.title = isFullscreen() ? 'ออกจากเต็มจอ' : 'เต็มจอ (Fullscreen)';
+            btnFullscreen.classList.toggle('active', isFullscreen());
+        };
+
+        // Toggle button
+        btnFullscreen.addEventListener('click', () => {
+            if (isFullscreen()) {
+                exitFullscreen();
+            } else {
+                enterFullscreen();
+            }
+        });
+
+        // Listen for fullscreen changes
+        document.addEventListener('fullscreenchange', updateIcon);
+        document.addEventListener('webkitfullscreenchange', updateIcon);
+
+        // AUTO-FULLSCREEN on first tap (mobile only)
+        if (isMobile()) {
+            let autoFullscreenDone = false;
+            const autoFullscreen = () => {
+                if (!autoFullscreenDone && !isFullscreen()) {
+                    autoFullscreenDone = true;
+                    // Small delay to ensure the user gesture is valid
+                    setTimeout(() => {
+                        enterFullscreen();
+                    }, 100);
+                }
+                document.removeEventListener('click', autoFullscreen);
+                document.removeEventListener('touchend', autoFullscreen);
+            };
+            document.addEventListener('click', autoFullscreen, { once: true });
+            document.addEventListener('touchend', autoFullscreen, { once: true });
         }
     }
 

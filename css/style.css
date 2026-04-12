@@ -20,6 +20,7 @@ body {
     color: var(--text-color);
     background-color: #000;
     height: 100vh;
+    height: 100dvh; /* Dynamic viewport height - accounts for mobile browser chrome */
     overflow: hidden;
     user-select: none;
 }
@@ -27,6 +28,7 @@ body {
 .game-container {
     display: flex;
     height: 100vh;
+    height: 100dvh;
     width: 100vw;
 }
 
@@ -883,6 +885,17 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
+.toolbar-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 12px var(--accent-color);
+}
+
+.toolbar-btn.active {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color);
+}
+
 .audio-control {
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
@@ -1234,6 +1247,7 @@ body {
 
     .main-area {
         height: 100vh;
+        height: 100dvh;
         width: 100vw;
     }
 
@@ -1302,6 +1316,7 @@ body {
         z-index: 45;
         top: 0;
         height: calc(100vh - 100px);
+        height: calc(100dvh - 100px);
     }
 
     .drawer-content {

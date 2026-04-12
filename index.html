@@ -3,8 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BunnyBar - คาเฟ่กระต่ายสุดคลาสสิก</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    <meta name="theme-color" content="#8B4513">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>DantalionBar</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -34,6 +40,9 @@
             <div class="audio-control">
                 <span class="audio-icon">🔉</span>
                 <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.2">
+            </div>
+            <div id="btn-fullscreen" class="toolbar-btn" title="เต็มจอ (Fullscreen)">
+                <span>⛶</span>
             </div>
         </div>
 
@@ -81,7 +90,7 @@
             <div class="character-list" id="character-list">
                 <!-- dynamically populated -->
             </div>
-            
+
             <!-- User Authentication at Bottom -->
             <div class="user-auth-bottom">
                 <div id="google-login-btn"></div>
@@ -142,7 +151,8 @@
     <!-- Fatal Overlay (Marayu Easter Egg) -->
     <div id="fatal-overlay" class="fatal-overlay">
         <div class="fatal-title">CRITICAL SYSTEM FAILURE</div>
-        <div class="fatal-text" style="color: #ffaa00; font-size: 1.5rem; margin-bottom: 20px;">EVACUATION PROTOCOL INITIATED</div>
+        <div class="fatal-text" style="color: #ffaa00; font-size: 1.5rem; margin-bottom: 20px;">EVACUATION PROTOCOL
+            INITIATED</div>
         <div id="fatal-countdown" style="font-size: 5rem; font-weight: bold; margin: 20px 0;">10</div>
         <div class="fatal-text">REASON: MARAYU'S SANITY DEPLETED</div>
         <div class="fatal-text" style="margin-top: 20px; opacity: 0.5;">DO NOT ATTEMPT TO RECONNECT</div>
@@ -166,7 +176,7 @@
     <!-- Login Prompt Modal -->
     <div id="login-prompt-overlay" class="modal hidden">
         <div class="modal-content glass login-prompt-content">
-            <h2>🍷 ยินดีต้อนรับสู่ BunnyBar</h2>
+            <h2>🍷 ยินดีต้อนรับสู่ DantalionBar</h2>
             <p>กรุณาล็อคอินเพื่อบันทึกความคืบหน้าและการสะสมเมนูของคุณ</p>
             <div id="google-login-prompt-btn" class="prompt-btn-container"></div>
             <p id="btn-skip-login" class="skip-link">ไม่ต้องการล็อคอิน? คลิกที่นี่เพื่อเล่นทันที</p>
