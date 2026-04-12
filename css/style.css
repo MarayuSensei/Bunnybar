@@ -1310,17 +1310,17 @@ body {
         font-size: 0.85rem;
     }
 
-    /* Left drawer - should NOT cover mixing station */
+    /* Left drawer - start below toolbar, should NOT cover mixing station */
     .left-drawer {
         width: 250px;
         z-index: 45;
-        top: 0;
-        height: calc(100vh - 100px);
-        height: calc(100dvh - 100px);
+        top: 55px;
+        height: calc(100vh - 150px);
+        height: calc(100dvh - 150px);
     }
 
     .drawer-content {
-        padding: 12px;
+        padding: 10px 12px;
     }
 
     .drawer-content h2 {
@@ -1595,7 +1595,9 @@ body {
 
     .left-drawer {
         width: 220px;
-        height: calc(100vh - 80px);
+        top: 50px;
+        height: calc(100vh - 130px);
+        height: calc(100dvh - 130px);
     }
 
     .drawer-content {
@@ -1931,8 +1933,9 @@ body {
     /* Ingredient drawer */
     .left-drawer {
         width: 200px;
-        height: 100vh;
-        top: 0;
+        height: calc(100vh - 40px);
+        height: calc(100dvh - 40px);
+        top: 38px;
         z-index: 45;
     }
 
@@ -2188,8 +2191,9 @@ body {
     .left-drawer {
         width: 220px;
         z-index: 45;
-        top: 0;
-        height: calc(100vh - 60px);
+        top: 40px;
+        height: calc(100vh - 100px);
+        height: calc(100dvh - 100px);
     }
 
     .drawer-content {
