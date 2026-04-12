@@ -2478,6 +2478,13 @@ body {
     .mobile-menu-toggle:active {
         transform: scale(0.9);
     }
+
+    /* Left drawer - push down below toolbar */
+    .left-drawer {
+        top: 50px;
+        height: calc(100vh - 120px);
+        height: calc(100dvh - 120px);
+    }
 }
 
 /* --- Hide mobile toggle by default (desktop with enough height) --- */
